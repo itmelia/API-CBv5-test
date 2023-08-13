@@ -1,7 +1,7 @@
 {
   "name": "api-cbv5-test",
   "version": "1.0.0",
-  "description": "simple api automation tests",
+  "description": "Simple api automation tests",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
