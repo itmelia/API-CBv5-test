@@ -1,14 +1,13 @@
 import { expect } from 'chai'
 import request from 'supertest'
 import 'dotenv/config'
+import { login } from '../helpers/general-helper'
 
 describe('Authentication', function () {
   describe('Authentication with valid credentials', function () {
     let res
     before(async () => {
-      res = await request(process.env.BASE_URL)
-        .post('/user/login')
-        .send({ email: process.env.EMAIL, password: process.env.PASSWORD })
+      res = await login(process.env.EMAIL, process.env.PASSWORD)
     })
 
     it('Validate status code', async function () {
@@ -24,8 +23,18 @@ describe('Authentication', function () {
     })
   })
 
-  describe('Auth with invalid credentials', () => {})
+  // describe('Auth with invalid credentials', () => {
+  //   let res
+  //   before(async () => {
+  //     res = await login('invalid', 'invalid')
+  //   })
+  //
+  //   it('validate r', () => {
+  //
+  //   });
+  // })
 })
+
 //
 //     it('Check the role', async () => {
 //       let res
