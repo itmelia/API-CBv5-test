@@ -22,11 +22,18 @@ describe('Create a user with valid credentials', () => {
   it('verify response message', () => {
     expect(res.body.message).contain('User created successfully')
   })
+
+  it('verify success status', () => {
+    expect(res.body.success).to.be.a('boolean')
+  })
+
+  it('verify response body is an object', () => {
+    expect(res.body).to.be.a('object')
+  })
 })
 
 describe('User registration', () => {
   let response
-
   before(async () => {
     response = await register(
       chance.first(),
