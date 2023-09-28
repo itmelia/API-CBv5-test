@@ -2,7 +2,7 @@ import request from 'supertest'
 const chance = require('chance').Chance()
 
 function login(email, password) {
-  return request(process.env.BASE_URL)
+  return request(process.env.BASE_URL + '/v5')
     .post('/user/login')
     .send({ email, password })
 }
@@ -13,7 +13,7 @@ function register(
   email,
   password = process.env.PASSWORD
 ) {
-  return request(process.env.BASE_URL)
+  return request(process.env.BASE_URL + '/v5')
     .post('/user')
     .send({ firstName, lastName, email, password })
 }
