@@ -25,7 +25,7 @@ describe('Authentication', function () {
 
   it('Check the role', async () => {
     let res
-    res = await request(process.env.BASE_URL)
+    res = await request(process.env.BASE_URL + '/v5')
       .post('/user/login')
       .send({ email: process.env.EMAIL, password: process.env.PASSWORD })
 
@@ -34,7 +34,7 @@ describe('Authentication', function () {
 
   it('Check the creation time', async () => {
     let res
-    res = await request(process.env.BASE_URL)
+    res = await request(process.env.BASE_URL + '/v5')
       .post('/user/login')
       .send({ email: process.env.EMAIL, password: process.env.PASSWORD })
 
@@ -43,7 +43,7 @@ describe('Authentication', function () {
 
   it('Check acl', async () => {
     let res
-    res = await request(process.env.BASE_URL)
+    res = await request(process.env.BASE_URL + '/v5')
       .post('/user/login')
       .send({ email: process.env.EMAIL, password: process.env.PASSWORD })
 

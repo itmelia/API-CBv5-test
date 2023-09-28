@@ -3,7 +3,7 @@ const chance = require('chance').Chance()
 
 function login(email, password) {
   return request(process.env.BASE_URL)
-    .post('/user/login')
+    .post('/v5/user/login')
     .send({ email, password })
 }
 
@@ -14,7 +14,7 @@ function register(
   password = process.env.PASSWORD
 ) {
   return request(process.env.BASE_URL)
-    .post('/user')
+    .post('/v5/user')
     .send({ firstName, lastName, email, password })
 }
 
