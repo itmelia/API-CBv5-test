@@ -23,3 +23,19 @@ describe('Create a user with valid credentials', () => {
     expect(res.body.message).contain('User created successfully')
   })
 })
+
+describe('User registration', () => {
+  let response
+
+  before(async () => {
+    response = await register(
+      chance.first(),
+      chance.last(),
+      process.env.PASSWORD
+    )
+  })
+
+  it('verify response status code', async () => {
+    expect(response.statusCode).to.eq(400)
+  })
+})
