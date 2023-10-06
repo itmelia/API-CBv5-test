@@ -7,7 +7,9 @@ module.exports = {
   reporter: 'mochawesome',
   reporterOption: [
     'json=false',
+    'quiet=true',
     'reportDir=MyReports',
     'reportFileName=UpdatedReport',
+    'reportFileName=[status]_[datetime]_ReportName',
   ],
 }
