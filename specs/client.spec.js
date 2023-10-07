@@ -69,4 +69,6 @@ describe('Client', () => {
     expect(getAllClients.statusCode).to.eq(200)
     expect(getAllClients.body.message).include('ok')
   })
+
+  it('should ', () => {})
 })
