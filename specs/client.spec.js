@@ -8,23 +8,13 @@ const chance = require('chance').Chance()
 
 describe('Client', () => {
   const randomEmail = 'user_' + Date.now() + '@gmail.com'
+  let id
 
   before(async () => {
     await login(process.env.EMAIL, process.env.PASSWORD)
-    const res = await createClient(
-      chance.name(),
-      chance.phone(),
-      randomEmail,
-      chance.word()
-    )
-
-    const id = res.body.payload
-    console.log(id)
   })
 
   it('Client creation', async () => {
-    //const randomEmail = 'user_' + Date.now() + '@gmail.com'
-    //await login(process.env.EMAIL, process.env.PASSWORD)
     const newClient = await createClient(
       chance.name(),
       chance.phone(),
@@ -32,27 +22,48 @@ describe('Client', () => {
       chance.word()
     )
 
+    id = newClient.body.payload
+
     expect(newClient.statusCode).to.eq(200)
     expect(newClient.body.message).include('created')
   })
 
   it('update the client`s data', async () => {
-    await login(process.env.EMAIL, process.env.PASSWORD)
-    const res = await createClient(
-      chance.name(),
-      chance.phone(),
-      randomEmail,
-      chance.word()
-    )
-
-    const id = res.body.payload
-    console.log(id)
-
     const clientUpdate = await request(process.env.BASE_URL)
-      .patch('/v5' + id)
-      .send({ email })
+      .patch('/v5/client/' + id)
+      .send({ randomEmail })
       .set('Authorization', process.env.TOKEN)
 
+    expect(clientUpdate.statusCode).to.eq(200)
     expect(clientUpdate.body.message).include('updated')
+  })
+
+  it('get client by ID', async () => {
+    const clientById = await request(process.env.BASE_URL)
+      .get('/v5/client/' + id)
+      .set('Authorization', process.env.TOKEN)
+
+    expect(clientById.statusCode).to.eq(200)
+    expect(clientById.body.message).to.eq('Get Client by id ok')
+    expect(clientById.body).to.be.a('object')
+  })
+
+  it('should get a client by name', async () => {
+    const clientByName = await request(process.env.BASE_URL)
+      .post('/v5/client/search')
+      .send({ name: chance.name() })
+      .set('Authorization', process.env.TOKEN)
+
+    expect(clientByName.statusCode).to.eq(200)
+    expect(clientByName.body.message).include('ok')
+  })
+
+  it('should find all clients', async () => {
+    const getAllClients = await request(process.env.BASE_URL)
+      .post('/v5/client/search')
+      .set('Authorization', process.env.TOKEN)
+
+    expect(getAllClients.statusCode).to.eq(200)
+    expect(getAllClients.body.message).include('ok')
   })
 })
