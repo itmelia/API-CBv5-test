@@ -8,7 +8,7 @@ const chance = require('chance').Chance()
 
 describe('Client', () => {
   const randomEmail = 'user_' + Date.now() + '@gmail.com'
-  let id
+  let id, clientName
 
   before(async () => {
     await login(process.env.EMAIL, process.env.PASSWORD)
@@ -22,7 +22,7 @@ describe('Client', () => {
       chance.word()
     )
 
-    id = newClient.body.payload
+    //id = newClient.body.payload
 
     expect(newClient.statusCode).to.eq(200)
     expect(newClient.body.message).include('created')
@@ -40,18 +40,21 @@ describe('Client', () => {
 
   it('get client by ID', async () => {
     const clientById = await request(process.env.BASE_URL)
-      .get('/v5/client/' + id)
+      .get('/v5/client/' + process.env.ID)
       .set('Authorization', process.env.TOKEN)
 
     expect(clientById.statusCode).to.eq(200)
     expect(clientById.body.message).to.eq('Get Client by id ok')
     expect(clientById.body).to.be.a('object')
+
+    clientName = clientById.body.payload.name
+    //console.log(clientName)
   })
 
   it('should get a client by name', async () => {
     const clientByName = await request(process.env.BASE_URL)
       .post('/v5/client/search')
-      .send({ name: chance.name() })
+      .send({ clientName })
       .set('Authorization', process.env.TOKEN)
 
     expect(clientByName.statusCode).to.eq(200)
