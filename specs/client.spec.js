@@ -146,6 +146,4 @@ describe('Negative test-cases for client', () => {
     expect(res.statusCode).to.eq(404)
     expect(res.body.message).include('not found')
   })
-
-  it('should ', () => {})
 })
