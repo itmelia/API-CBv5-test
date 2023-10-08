@@ -11,11 +11,7 @@ before(async () => {
 })
 
 before(async () => {
-  const res = await createClient(
-    chance.name(),
-    chance.phone(),
-    chance.email(),
-    chance.word()
-  )
+  const res = await createClient()
+
   process.env.ID = res.body.payload
 })

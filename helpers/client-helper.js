@@ -13,10 +13,4 @@ function createClient(
     .set('Authorization', process.env.TOKEN)
 }
 
-// function updateClient(email = chance.phone()) {
-//   return request(process.env.BASE_URL)
-//     .patch('/v5' + process.env.ID)
-//     .send({ email })
-//     .set('Authorization', process.env.TOKEN)
-// }
 export { createClient }

@@ -30,7 +30,7 @@ describe('Client', () => {
 
   it('update the client`s data', async () => {
     const clientUpdate = await request(process.env.BASE_URL)
-      .patch('/v5/client/' + id)
+      .patch('/v5/client/' + process.env.ID)
       .send({ randomEmail })
       .set('Authorization', process.env.TOKEN)
 
@@ -47,7 +47,7 @@ describe('Client', () => {
     expect(clientById.body.message).to.eq('Get Client by id ok')
     expect(clientById.body).to.be.a('object')
 
-    clientName = clientById.body.payload.name
+    //clientName = clientById.body.payload.name
     //console.log(clientName)
   })
 
@@ -68,6 +68,83 @@ describe('Client', () => {
 
     expect(getAllClients.statusCode).to.eq(200)
     expect(getAllClients.body.message).include('ok')
+  })
+
+  it('delete the client', async () => {
+    const deleteClient = await request(process.env.BASE_URL)
+      .delete('/v5/client/' + process.env.ID)
+      .set('Authorization', process.env.TOKEN)
+
+    expect(deleteClient.statusCode).to.eq(200)
+    expect(deleteClient.body.message).include('deleted')
+  })
+
+  // it('should delete all clients', async () => {
+  //   const deleteAllClients = await request(process.env.BASE_URL)
+  //     .delete('/v5/client')
+  //     .set('Authorization', process.env.TOKEN)
+  //
+  //   expect(deleteAllClients.statusCode).to.eq(200)
+  //   //expect(deleteAllClients.body.message).include()
+  // })
+})
+
+describe('Negative test-cases for client', () => {
+  before(async () => {
+    await login(process.env.EMAIL, process.env.PASSWORD)
+  })
+
+  it('Creating a client with empty required fields', async () => {
+    const res = await request(process.env.BASE_URL)
+      .post('/v5/client')
+      .send({ name: '', phone: '' })
+      .set('Authorization', process.env.TOKEN)
+
+    expect(res.statusCode).to.eq(400)
+    expect(res.body.message).to.eq('Client create error')
+  })
+
+  it('Create a client with all fields empty', async () => {
+    const res = await request(process.env.BASE_URL)
+      .post('/v5/client')
+      .send({ name: '', phone: '', email: '', description: '' })
+      .set('Authorization', process.env.TOKEN)
+
+    expect(res.statusCode).to.eq(400)
+    expect(res.body.message).to.eq('Client create error')
+  })
+
+  it('Create a client without authorization', async () => {
+    const res = await request(process.env.BASE_URL).post('/v5/client').send({
+      name: 'qwerty',
+      phone: '123456789',
+      email: 'qwerty@gmail.com',
+      description: 'qwerty qwerty',
+    })
+
+    expect(res.statusCode).to.eq(400)
+    expect(res.body.message).to.eq('Auth failed')
+  })
+
+  it('Update the client without authorization', async () => {
+    const res = await request(process.env.BASE_URL)
+      .patch('/v5/client/' + process.env.ID)
+      .send({
+        name: 'Eliee',
+      })
+
+    expect(res.statusCode).to.eq(400)
+    expect(res.body.message).to.eq('Auth failed')
+  })
+
+  it('Update the client without ID', async () => {
+    const res = await request(process.env.BASE_URL)
+      .patch('/v5/client')
+      .send({ name: 'Eliee' })
+      .set('Authorization', process.env.TOKEN)
+
+    expect(res.statusCode).to.eq(404)
+    expect(res.body.message).include('not found')
   })
 
   it('should ', () => {})
