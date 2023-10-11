@@ -1,12 +1,9 @@
 import { createVendor } from '../helpers/vendor-helper'
 import { expect } from 'chai'
-import { login } from '../helpers/general-helper'
 import request from 'supertest'
 const chance = require('chance').Chance()
 
 describe('Vendor', () => {
-  //const randomEmail = 'vendor_' + Date.now() + '@gmail.com'
-
   it('should create a new vendor', async () => {
     const newVendor = await createVendor()
 
@@ -17,7 +14,7 @@ describe('Vendor', () => {
   it('should update the vendor', async () => {
     const updateVendor = await request(process.env.BASE_URL)
       .patch('/v5/vendor/' + process.env.VENDOR_ID)
-      .send({ email: chance.email() })
+      .send({ email: 'vendor_' + Date.now() + '@gmail.com' })
       .set('Authorization', process.env.TOKEN)
 
     expect(updateVendor.statusCode).to.eq(200)
