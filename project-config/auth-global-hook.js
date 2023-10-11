@@ -2,6 +2,7 @@ import request from 'supertest'
 import 'dotenv/config'
 import { login } from '../helpers/general-helper'
 import { createClient } from '../helpers/client-helper'
+import { createVendor } from '../helpers/vendor-helper'
 const chance = require('chance').Chance()
 
 before(async () => {
@@ -14,4 +15,10 @@ before(async () => {
   const res = await createClient()
 
   process.env.ID = res.body.payload
+})
+
+before(async () => {
+  const vendorId = await createVendor()
+
+  process.env.VENDOR_ID = vendorId.body.payload
 })
