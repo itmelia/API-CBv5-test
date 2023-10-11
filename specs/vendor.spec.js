@@ -17,9 +17,7 @@ describe('Vendor', () => {
   it('should update the vendor', async () => {
     const updateVendor = await request(process.env.BASE_URL)
       .patch('/v5/vendor/' + process.env.VENDOR_ID)
-      .send({
-        email: chance.email(),
-      })
+      .send({ email: chance.email() })
       .set('Authorization', process.env.TOKEN)
 
     expect(updateVendor.statusCode).to.eq(200)
