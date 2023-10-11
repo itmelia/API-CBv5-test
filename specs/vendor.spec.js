@@ -2,23 +2,16 @@ import { createVendor } from '../helpers/vendor-helper'
 import { expect } from 'chai'
 import { login } from '../helpers/general-helper'
 import request from 'supertest'
+const chance = require('chance').Chance()
 
 describe('Vendor', () => {
-  let id
   //const randomEmail = 'vendor_' + Date.now() + '@gmail.com'
-
-  before(async () => {
-    await login(process.env.EMAIL, process.env.PASSWORD)
-  })
-
-  afterEach(() => {})
 
   it('should create a new vendor', async () => {
     const newVendor = await createVendor()
 
     expect(newVendor.statusCode).to.eq(200)
     expect(newVendor.body.message).include('created')
-    console.log(newVendor)
   })
 
   it('should update the vendor', async () => {
