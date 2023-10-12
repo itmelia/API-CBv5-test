@@ -4,6 +4,8 @@ import { login } from '../helpers/general-helper'
 import { createClient } from '../helpers/client-helper'
 import { createVendor } from '../helpers/vendor-helper'
 import { createService } from '../helpers/service-helper'
+import { createOrder } from '../helpers/order-helper'
+
 const chance = require('chance').Chance()
 
 before(async () => {
@@ -28,4 +30,10 @@ before(async () => {
   const serviceId = await createService()
 
   process.env.SERVICE_ID = serviceId.body.payload
+})
+
+before(async () => {
+  const orderId = await createOrder()
+
+  process.env.ORDER_ID = orderId.body.payload
 })
