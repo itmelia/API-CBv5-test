@@ -6,7 +6,7 @@ import { createVendor } from '../helpers/vendor-helper'
 import { createService } from '../helpers/service-helper'
 import { createOrder } from '../helpers/order-helper'
 
-const chance = require('chance').Chance()
+//const chance = require('chance').Chance()
 
 before(async () => {
   const response = await login(process.env.EMAIL, process.env.PASSWORD)

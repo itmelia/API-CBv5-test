@@ -1,6 +1,5 @@
 import { createClient } from '../helpers/client-helper'
 import { expect } from 'chai'
-//import request from 'supertest'
 import { login } from '../helpers/general-helper'
 import request from 'supertest'
 
@@ -78,15 +77,6 @@ describe('Client', () => {
     expect(deleteClient.statusCode).to.eq(200)
     expect(deleteClient.body.message).include('deleted')
   })
-
-  // it('should delete all clients', async () => {
-  //   const deleteAllClients = await request(process.env.BASE_URL)
-  //     .delete('/v5/client')
-  //     .set('Authorization', process.env.TOKEN)
-  //
-  //   expect(deleteAllClients.statusCode).to.eq(200)
-  //   //expect(deleteAllClients.body.message).include()
-  // })
 })
 
 describe('Negative test-cases for client', () => {
