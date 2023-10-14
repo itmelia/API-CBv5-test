@@ -1,6 +1,8 @@
 name: API-CBv5-test CI
 
 on:
+  # schedule:
+   # - cron: '0 2,14 1 * *'
   push:
     branches: [ "main" ]
   pull_request:
