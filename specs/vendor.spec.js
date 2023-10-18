@@ -1,50 +1,93 @@
-import { createVendor } from '../helpers/vendor-helper'
+import {
+  createVendor,
+  deleteVendor,
+  getAllVendors,
+  getVendorById,
+  updateVendor,
+} from '../helpers/vendor-helper'
 import { expect } from 'chai'
-import request from 'supertest'
 const chance = require('chance').Chance()
 
-describe('Vendor', () => {
-  it('should create a new vendor', async () => {
-    const newVendor = await createVendor()
+describe('Vendor tests', () => {
+  describe('Create a vendor', () => {
+    let res
 
-    expect(newVendor.statusCode).to.eq(200)
-    expect(newVendor.body.message).include('created')
+    before(async () => {
+      res = await createVendor()
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).include('created')
+    })
   })
 
-  it('should update the vendor', async () => {
-    const updateVendor = await request(process.env.BASE_URL)
-      .patch('/v5/vendor/' + process.env.VENDOR_ID)
-      .send({ email: 'vendor_' + Date.now() + '@gmail.com' })
-      .set('Authorization', process.env.TOKEN)
+  describe('Update the vendor', () => {
+    let vendorId, vendorName, updatedVendorName, res
 
-    expect(updateVendor.statusCode).to.eq(200)
-    expect(updateVendor.body.message).include('updated')
+    before(async () => {
+      vendorId = (await createVendor()).body.payload
+      vendorName = (await getVendorById(vendorId)).body.payload.name
+
+      res = await updateVendor(vendorId)
+      updatedVendorName = (await getVendorById(vendorId)).body.payload.name
+    })
+
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).include('updated')
+    })
   })
 
-  it('should get the vendor by id', async () => {
-    const getById = await request(process.env.BASE_URL)
-      .get('/v5/vendor/' + process.env.VENDOR_ID)
-      .set('Authorization', process.env.TOKEN)
+  describe('Get vendor by ID', () => {
+    let vendorId, res
 
-    expect(getById.statusCode).to.eq(200)
-    expect(getById.body.message).to.eq('Get Vendor by id ok')
+    before(async () => {
+      vendorId = (await createVendor()).body.payload
+      res = await getVendorById(vendorId)
+    })
+
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).to.eq('Get Vendor by id ok')
+    })
   })
 
-  it('should return all vendors', async () => {
-    const allVendors = await request(process.env.BASE_URL)
-      .post('/v5/vendor/search')
-      .set('Authorization', process.env.TOKEN)
+  describe('Get all vendors', () => {
+    let res
 
-    expect(allVendors.statusCode).to.eq(200)
-    expect(allVendors.body.message).include('ok')
+    before(async () => {
+      res = await getAllVendors()
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).include('ok')
+    })
   })
 
-  it('should delete the vendor', async () => {
-    const deleteVendor = await request(process.env.BASE_URL)
-      .delete('/v5/vendor/' + process.env.VENDOR_ID)
-      .set('Authorization', process.env.TOKEN)
+  describe('Delete the vendor', () => {
+    let vendorId, res
+    before(async () => {
+      vendorId = (await createVendor()).body.payload
+      res = await deleteVendor(vendorId)
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
 
-    expect(deleteVendor.statusCode).to.eq(200)
-    expect(deleteVendor.body.message).include('deleted')
+    it('check the response message', () => {
+      expect(res.body.message).include('deleted')
+    })
   })
 })
