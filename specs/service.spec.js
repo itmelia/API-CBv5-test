@@ -1,60 +1,110 @@
+import { createVendor, getVendorById } from '../helpers/vendor-helper'
+
 const chance = require('chance').Chance()
-import { createService } from '../helpers/service-helper'
+import {
+  createService,
+  deleteService,
+  getAllServices,
+  getServiceById,
+  getServiceByVendor,
+  updateService,
+} from '../helpers/service-helper'
 import { expect } from 'chai'
 import request from 'supertest'
 
-describe('Service', () => {
-  it('should create a service', async () => {
-    const newService = await createService()
+describe('Service tests', () => {
+  describe('Create a service', () => {
+    let vendorId, res
+    before(async () => {
+      vendorId = (await createVendor()).body.payload
 
-    expect(newService.statusCode).to.eq(200)
-    expect(newService.body.message).to.eq('Service created')
+      res = await createService(vendorId)
+    })
+
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).to.eq('Service created')
+    })
   })
 
-  it('should update the service', async () => {
-    const updateService = await request(process.env.BASE_URL)
-      .patch('/v5/service/' + process.env.SERVICE_ID)
-      .send({ name: chance.name() })
-      .set('Authorization', process.env.TOKEN)
+  describe('Update the service', () => {
+    let serviceId, serviceName, updatedServiceName, res
+    before(async () => {
+      serviceId = (await createService()).body.payload
+      serviceName = (await getServiceById()).body.payload.name
 
-    expect(updateService.statusCode).to.eq(200)
-    expect(updateService.body.message).to.eq('Service updated')
+      res = await updateService(serviceId)
+      updatedServiceName = (await getServiceById(serviceId)).body.payload.name
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).to.eq('Service updated')
+    })
   })
 
-  it('should get the service by ID', async () => {
-    const getById = await request(process.env.BASE_URL)
-      .get('/v5/service/' + process.env.SERVICE_ID)
-      .set('Authorization', process.env.TOKEN)
+  describe('Get the service by ID', () => {
+    let serviceId, res
+    before(async () => {
+      serviceId = (await createService()).body.payload
 
-    expect(getById.statusCode).to.eq(200)
-    expect(getById.body.message).include('ok')
+      res = await getServiceById(serviceId)
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
+
+    it('check the response message', () => {
+      expect(res.body.message).include('ok')
+    })
   })
 
-  it('should get all services', async () => {
-    const getAllServices = await request(process.env.BASE_URL)
-      .post('/v5/service/search')
-      .set('Authorization', process.env.TOKEN)
+  describe('Get all services', () => {
+    let res
+    before(async () => {
+      res = await getAllServices()
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
 
-    expect(getAllServices.statusCode).to.eq(200)
-    expect(getAllServices.body.message).include('ok')
+    it('check the response message', () => {
+      expect(res.body.message).include('ok')
+    })
   })
 
-  it('should get the service by vendor', async () => {
-    const getByVendor = await request(process.env.BASE_URL)
-      .post('/v5/service/search')
-      .send({ vendor: process.env.VENDOR_ID })
-      .set('Authorization', process.env.TOKEN)
+  describe('Get the service by vendor', () => {
+    let vendorId, res
+    before(async () => {
+      vendorId = (await createVendor()).body.payload
+      res = await getServiceByVendor(vendorId)
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
 
-    expect(getByVendor.statusCode).to.eq(200)
-    expect(getByVendor.body.message).to.eq('Service Search ok')
+    it('check the response message', () => {
+      expect(res.body.message).to.eq('Service Search ok')
+    })
   })
 
-  it('should delete the service', async () => {
-    const deleteService = await request(process.env.BASE_URL)
-      .delete('/v5/service/' + process.env.SERVICE_ID)
-      .set('Authorization', process.env.TOKEN)
+  describe('Delete the service', () => {
+    let serviceId, res
+    before(async () => {
+      serviceId = (await createService()).body.payload
+      res = await deleteService(serviceId)
+    })
+    it('check the status code', () => {
+      expect(res.statusCode).to.eq(200)
+    })
 
-    expect(deleteService.statusCode).to.eq(200)
-    expect(deleteService.body.message).to.eq('Service deleted')
+    it('check the response message', () => {
+      expect(res.body.message).include('deleted')
+    })
   })
 })
