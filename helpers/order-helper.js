@@ -15,7 +15,7 @@ function createOrder(clientId, serviceId) {
       clientPaid: randomNumSecond,
       vendorPrice: randomNumThird,
       vendorPaid: randomNumThird,
-      notes: 'First Order',
+      notes: chance.sentence(),
     })
     .set('Authorization', process.env.TOKEN)
 }
@@ -34,4 +34,22 @@ function updateOrder(orderId) {
     })
     .set('Authorization', process.env.TOKEN)
 }
-export { createOrder, updateOrder }
+
+function getOrderById(orderId) {
+  return request(process.env.BASE_URL)
+    .get('/v5/order/' + orderId)
+    .set('Authorization', process.env.TOKEN)
+}
+
+function getAllOrders() {
+  return request(process.env.BASE_URL)
+    .post('/v5/order/search')
+    .set('Authorization', process.env.TOKEN)
+}
+
+function deleteOrder(orderId) {
+  return request(process.env.BASE_URL)
+    .delete('/v5/service/' + orderId)
+    .set('Authorization', process.env.TOKEN)
+}
+export { createOrder, updateOrder, getOrderById, getAllOrders, deleteOrder }
