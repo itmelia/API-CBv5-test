@@ -1,4 +1,4 @@
-import { createVendor, getVendorById } from '../helpers/vendor-helper'
+import { createVendor } from '../helpers/vendor-helper'
 
 const chance = require('chance').Chance()
 import {

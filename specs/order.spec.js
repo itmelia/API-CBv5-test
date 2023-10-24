@@ -9,6 +9,7 @@ import { createClient } from '../helpers/client-helper'
 import { createService } from '../helpers/service-helper'
 import { createVendor } from '../helpers/vendor-helper'
 import { expect } from 'chai'
+import { log } from 'mochawesome/src/utils'
 
 const chance = require('chance').Chance()
 
@@ -32,29 +33,34 @@ describe('Order tests', () => {
     })
 
     describe('Order update', () => {
-      let clientId, serviceId, orderId, res
+      let clientId, serviceId, orderId, vendorId, res
 
       before(async () => {
         clientId = (await createClient()).body.payload
-        serviceId = (await createService()).body.payload
+        vendorId = (await createVendor()).body.payload
+        serviceId = (await createService(vendorId)).body.payload
 
         orderId = (await createOrder(clientId, serviceId)).body.payload
-        res = await updateOrder()
+        res = await updateOrder(orderId)
       })
 
       it('check the status code', () => {
-        expect(updateOrder.statusCode).to.eq(200)
+        expect(res.statusCode).to.eq(200)
       })
 
       it('check the response message', () => {
-        expect(updateOrder.body.message).include('updated')
+        expect(res.body.message).include('updated')
       })
     })
 
     describe('Get order by id', () => {
-      let orderId, res
+      let clientId, vendorId, serviceId, orderId, res
       before(async () => {
-        orderId = (await createOrder()).body.payload
+        clientId = (await createClient()).body.payload
+        vendorId = (await createVendor()).body.payload
+        serviceId = (await createService(vendorId)).body.payload
+
+        orderId = (await createOrder(clientId, serviceId)).body.payload
         res = await getOrderById(orderId)
       })
 
@@ -82,11 +88,18 @@ describe('Order tests', () => {
     })
 
     describe('Delete the order', () => {
-      let orderId, res
+      let clientId, serviceId, res
       before(async () => {
-        orderId = (await createOrder()).body.payload
+        clientId = (await createClient()).body.payload
+        let vendorId = (await createVendor()).body.payload
+        serviceId = (await createService(vendorId)).body.payload
+
+        const orderId = (await createOrder(clientId, serviceId)).body.payload
         res = await deleteOrder(orderId)
+
+        //console.log(serviceId)
       })
+
       it('check the status code', () => {
         expect(res.statusCode).to.eq(200)
       })

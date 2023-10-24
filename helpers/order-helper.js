@@ -24,6 +24,7 @@ function updateOrder(orderId) {
   const randomNumFirst = Math.floor(Math.random() * 10000)
   const randomNumSecond = Math.floor(Math.random() * 10000)
   const randomNumThird = Math.floor(Math.random() * 10000)
+
   return request(process.env.BASE_URL)
     .patch('/v5/order/' + orderId)
     .send({
@@ -49,7 +50,7 @@ function getAllOrders() {
 
 function deleteOrder(orderId) {
   return request(process.env.BASE_URL)
-    .delete('/v5/service/' + orderId)
+    .delete('/v5/order/' + orderId)
     .set('Authorization', process.env.TOKEN)
 }
 export { createOrder, updateOrder, getOrderById, getAllOrders, deleteOrder }
