@@ -42,6 +42,13 @@ function getOrderById(orderId) {
     .set('Authorization', process.env.TOKEN)
 }
 
+function getOrderByClientId(clientId) {
+  return request(process.env.BASE_URL)
+    .post('/v5/order/search')
+    .send({ clientId })
+    .set('Authorization', process.env.TOKEN)
+}
+
 function getAllOrders() {
   return request(process.env.BASE_URL)
     .post('/v5/order/search')
@@ -53,4 +60,11 @@ function deleteOrder(orderId) {
     .delete('/v5/order/' + orderId)
     .set('Authorization', process.env.TOKEN)
 }
-export { createOrder, updateOrder, getOrderById, getAllOrders, deleteOrder }
+export {
+  createOrder,
+  updateOrder,
+  getOrderById,
+  getAllOrders,
+  deleteOrder,
+  getOrderByClientId,
+}

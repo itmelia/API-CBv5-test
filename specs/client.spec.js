@@ -69,6 +69,10 @@ describe('Client tests', () => {
       it('check if the response is an object', () => {
         expect(res.body).to.be.a('object')
       })
+
+      it('check if the id is a string', () => {
+        expect(res.body.payload._id).to.be.a('string')
+      })
     })
 
     describe('Get the client by name', () => {
@@ -87,6 +91,10 @@ describe('Client tests', () => {
 
       it('check the response body', () => {
         expect(res.body.message).include('ok')
+      })
+
+      it('check if the client is first on the response list', () => {
+        expect(res.body.payload.pager.isFirst).to.be.a('boolean')
       })
     })
 

@@ -4,12 +4,12 @@ import {
   getAllOrders,
   getOrderById,
   updateOrder,
+  getOrderByClientId,
 } from '../helpers/order-helper'
 import { createClient } from '../helpers/client-helper'
 import { createService } from '../helpers/service-helper'
 import { createVendor } from '../helpers/vendor-helper'
 import { expect } from 'chai'
-import { log } from 'mochawesome/src/utils'
 
 const chance = require('chance').Chance()
 
@@ -70,6 +70,39 @@ describe('Order tests', () => {
 
       it('check the response message', () => {
         expect(res.body.message).include('ok')
+      })
+
+      it('verify the body has info about the client', () => {
+        expect(res.body.payload).to.have.property('client').to.be.a('object')
+      })
+
+      it('verify the body has info about the service', () => {
+        expect(res.body.payload).to.have.property('service').to.be.a('object')
+      })
+    })
+
+    describe('Get the order by clientId', () => {
+      let clientId, vendorId, serviceId, orderId, res
+
+      before(async () => {
+        clientId = (await createClient()).body.payload
+        vendorId = (await createVendor()).body.payload
+        serviceId = (await createService(vendorId)).body.payload
+
+        orderId = (await createOrder(clientId, serviceId)).body.payload
+        res = await getOrderByClientId(clientId)
+      })
+
+      it('check the status code', () => {
+        expect(res.statusCode).to.eq(200)
+      })
+
+      it('check the response message', () => {
+        expect(res.body.message).include('ok')
+      })
+
+      it('verify the response body has items', () => {
+        expect(res.body.payload).to.haveOwnProperty('items').to.be.an('array')
       })
     })
 
